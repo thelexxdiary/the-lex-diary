@@ -26,6 +26,105 @@
   .latest-2{left:31.7%;top:74.0%;width:8.4%;height:8.4%;}
   .latest-4{left:51.2%;top:74.0%;width:8.4%;height:8.4%;}
   .latest-5{left:61.5%;top:74.0%;width:8.4%;height:8.4%;}
+  /* ===== CLICKABLE LAYER — DOES NOT CHANGE THE DESIGN ===== */
+
+.hotspot{
+  position:absolute;
+  display:block;
+  z-index:20;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+/*
+  NAVIGATION HOTSPOTS
+  These are invisible and sit over the words already in the artwork.
+*/
+.nav-home{left:25.0%;top:18.1%;width:5.4%;height:2.0%;}
+.nav-thoughts{left:30.5%;top:18.1%;width:6.5%;height:2.0%;}
+.nav-love{left:37.2%;top:18.1%;width:4.2%;height:2.0%;}
+.nav-friends{left:41.5%;top:18.1%;width:5.7%;height:2.0%;}
+.nav-motherhood{left:47.3%;top:18.1%;width:8.7%;height:2.0%;}
+.nav-style{left:56.1%;top:18.1%;width:4.4%;height:2.0%;}
+.nav-advice{left:60.6%;top:18.1%;width:5.4%;height:2.0%;}
+.nav-archive{left:66.1%;top:18.1%;width:6.2%;height:2.0%;}
+.nav-search{left:72.4%;top:18.1%;width:2.4%;height:2.0%;}
+
+/* Featured READ MORE */
+.feature-read-more{
+  left:28.5%;
+  top:58.2%;
+  width:8.7%;
+  height:3.0%;
+}
+
+/* Latest-entry clickable areas */
+.entry-1{left:20.5%;top:72.0%;width:10.0%;height:12.0%;}
+.entry-2{left:30.8%;top:72.0%;width:10.0%;height:12.0%;}
+.entry-3{left:41.0%;top:72.0%;width:10.0%;height:12.0%;}
+.entry-4{left:51.0%;top:72.0%;width:10.0%;height:12.0%;}
+.entry-5{left:61.0%;top:72.0%;width:10.0%;height:12.0%;}
+
+/* Popup diary entry */
+.diary-popup{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(73,18,48,.78);
+  padding:25px;
+  line-height:1.5;
+  overflow:auto;
+}
+
+.diary-popup.open{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.diary-popup-paper{
+  position:relative;
+  width:min(650px,92vw);
+  max-height:85vh;
+  overflow:auto;
+  background:#fff1f7;
+  color:#51102f;
+  border:4px solid #e92879;
+  box-shadow:10px 10px 0 #f58fba;
+  padding:35px;
+  font-family:Georgia,serif;
+}
+
+.diary-popup-paper h2{
+  color:#df176b;
+  line-height:1.1;
+}
+
+.diary-popup-paper p{
+  line-height:1.7;
+}
+
+.popup-close{
+  position:absolute;
+  top:8px;
+  right:12px;
+  border:0;
+  background:transparent;
+  color:#d81767;
+  font-size:32px;
+  cursor:pointer;
+}
+
+/* Search popup */
+.search-box{
+  width:100%;
+  padding:12px;
+  border:2px solid #e92879;
+  font-size:16px;
+}
   @media (max-width: 800px){
     body{background:#f5b1cf;}
     .page{width:1536px;max-width:none;}
@@ -45,6 +144,349 @@
   <div class="photo-slot latest-2"><div class="label">YOUR PHOTO</div></div>
   <div class="photo-slot latest-4"><div class="label">YOUR PHOTO</div></div>
   <div class="photo-slot latest-5"><div class="label">YOUR PHOTO</div></div>
+  <!-- ===== INVISIBLE CLICKABLE NAVIGATION ===== -->
+
+<a class="hotspot nav-home" href="#" data-section="home" aria-label="Home"></a>
+<a class="hotspot nav-thoughts" href="#" data-section="thoughts" aria-label="Thoughts"></a>
+<a class="hotspot nav-love" href="#" data-section="love" aria-label="Love"></a>
+<a class="hotspot nav-friends" href="#" data-section="friends" aria-label="Friends"></a>
+<a class="hotspot nav-motherhood" href="#" data-section="motherhood" aria-label="Motherhood"></a>
+<a class="hotspot nav-style" href="#" data-section="style" aria-label="Style"></a>
+<a class="hotspot nav-advice" href="#" data-section="advice" aria-label="Advice"></a>
+<a class="hotspot nav-archive" href="#" data-section="archive" aria-label="Archive"></a>
+
+<button class="hotspot nav-search" id="searchButton" aria-label="Search"></button>
+
+<!-- FEATURED READ MORE -->
+<button
+  class="hotspot feature-read-more"
+  data-entry="featured"
+  aria-label="Read featured diary entry">
+</button>
+
+<!-- LATEST ENTRIES -->
+<button class="hotspot entry-1" data-entry="entry1" aria-label="Read entry 1"></button>
+<button class="hotspot entry-2" data-entry="entry2" aria-label="Read entry 2"></button>
+<button class="hotspot entry-3" data-entry="entry3" aria-label="Read entry 3"></button>
+<button class="hotspot entry-4" data-entry="entry4" aria-label="Read entry 4"></button>
+<button class="hotspot entry-5" data-entry="entry5" aria-label="Read entry 5"></button>
 </div>
+  <!-- ===== DIARY POPUP ===== -->
+
+<div class="diary-popup" id="diaryPopup">
+  <div class="diary-popup-paper">
+
+    <button class="popup-close" id="popupClose">×</button>
+
+    <h2 id="popupTitle"></h2>
+
+    <div id="popupText"></div>
+
+  </div>
+</div>
+
+
+<script>
+
+/* ===============================
+   THE LEX DIARY CONTENT
+   =============================== */
+
+const diaryEntries = {
+
+  featured: {
+    title: "Dear Diary... This Is Just the Beginning 💋",
+    text: `
+      <p><em>Dear Diary,</em></p>
+
+      <p>
+        Welcome to my little corner of the internet.
+        The Lex Diary is where I get to document life as it happens —
+        the pretty parts, the messy parts, the lessons,
+        the memories, and everything in between.
+      </p>
+
+      <p>
+        I don't have everything figured out,
+        and that's kind of the point.
+      </p>
+
+      <p>
+        This is a place for becoming, growing, loving,
+        laughing, changing my mind, dressing cute,
+        taking too many pictures, and romanticizing
+        the little things.
+      </p>
+
+      <p>
+        Consider this page my digital diary.
+      </p>
+
+      <p><strong>xoxo,<br>Lex 💋</strong></p>
+    `
+  },
+
+  entry1: {
+    title: "Entering a New Era ✨",
+    text: `
+      <p>
+        Some chapters don't announce themselves.
+        Sometimes you just wake up and realize
+        you're becoming somebody new.
+      </p>
+
+      <p>
+        I'm learning to enjoy becoming instead of
+        rushing myself to have everything figured out.
+      </p>
+    `
+  },
+
+  entry2: {
+    title: "Love Should Feel Soft 💗",
+    text: `
+      <p>
+        I'm learning that love doesn't always have
+        to feel confusing to feel exciting.
+      </p>
+
+      <p>
+        Consistency, honesty, laughter and feeling
+        comfortable enough to be yourself matter too.
+      </p>
+    `
+  },
+
+  entry3: {
+    title: "The People Who Feel Like Home 🎀",
+    text: `
+      <p>
+        Some friendships become part of your story
+        in ways you don't realize until years later.
+      </p>
+
+      <p>
+        I want to remember the laughs,
+        random conversations and little moments too.
+      </p>
+    `
+  },
+
+  entry4: {
+    title: "Main Character Energy 💋",
+    text: `
+      <p>
+        Sometimes getting dressed up,
+        taking pictures and doing something just
+        because it makes you happy is enough.
+      </p>
+    `
+  },
+
+  entry5: {
+    title: "A Note to Future Me 💌",
+    text: `
+      <p>
+        I hope when I come back and read this,
+        I remember how much life was still ahead of me.
+      </p>
+
+      <p>
+        Keep growing. Keep dreaming.
+        And please keep taking pictures.
+      </p>
+    `
+  }
+
+};
+
+
+/* ===============================
+   OPEN DIARY ENTRIES
+   =============================== */
+
+const popup = document.getElementById("diaryPopup");
+const popupTitle = document.getElementById("popupTitle");
+const popupText = document.getElementById("popupText");
+
+
+document.querySelectorAll("[data-entry]").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const entry = diaryEntries[button.dataset.entry];
+
+    if (!entry) return;
+
+    popupTitle.textContent = entry.title;
+    popupText.innerHTML = entry.text;
+
+    popup.classList.add("open");
+
+  });
+
+});
+
+
+document.getElementById("popupClose").addEventListener("click", () => {
+  popup.classList.remove("open");
+});
+
+
+popup.addEventListener("click", event => {
+
+  if (event.target === popup) {
+    popup.classList.remove("open");
+  }
+
+});
+
+
+/* ===============================
+   NAVIGATION
+   =============================== */
+
+document.querySelectorAll("[data-section]").forEach(link => {
+
+  link.addEventListener("click", event => {
+
+    event.preventDefault();
+
+    const section = link.dataset.section;
+
+    if (section === "home") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+      return;
+    }
+
+    popupTitle.textContent =
+      section.charAt(0).toUpperCase() +
+      section.slice(1) +
+      " ♡";
+
+    popupText.innerHTML = `
+      <p>
+        This is your <strong>${section}</strong> section.
+      </p>
+
+      <p>
+        We'll add your ${section} diary entries here
+        without changing your original Lex Diary design.
+      </p>
+    `;
+
+    popup.classList.add("open");
+
+  });
+
+});
+
+
+/* ===============================
+   SEARCH
+   =============================== */
+
+document.getElementById("searchButton").addEventListener("click", () => {
+
+  popupTitle.textContent = "Search The Lex Diary 🔍";
+
+  popupText.innerHTML = `
+    <input
+      class="search-box"
+      id="diarySearch"
+      type="search"
+      placeholder="Search the diary..."
+      autocomplete="off"
+    >
+
+    <div id="searchResults" style="margin-top:20px;"></div>
+  `;
+
+  popup.classList.add("open");
+
+  const input = document.getElementById("diarySearch");
+  const results = document.getElementById("searchResults");
+
+  input.focus();
+
+
+  input.addEventListener("input", () => {
+
+    const term = input.value.toLowerCase().trim();
+
+    results.innerHTML = "";
+
+    if (!term) return;
+
+
+    const matches = Object.entries(diaryEntries).filter(([key, entry]) => {
+
+      const searchable =
+        (entry.title + " " + entry.text)
+        .replace(/<[^>]*>/g, " ")
+        .toLowerCase();
+
+      return searchable.includes(term);
+
+    });
+
+
+    if (!matches.length) {
+
+      results.innerHTML =
+        "<p>No diary entries found yet 💌</p>";
+
+      return;
+    }
+
+
+    matches.forEach(([key, entry]) => {
+
+      const result = document.createElement("button");
+
+      result.textContent = entry.title;
+
+      result.style.cssText = `
+        display:block;
+        width:100%;
+        margin:8px 0;
+        padding:12px;
+        border:1px solid #e92879;
+        background:white;
+        color:#b41359;
+        cursor:pointer;
+        text-align:left;
+      `;
+
+      result.addEventListener("click", () => {
+
+        popupTitle.textContent = entry.title;
+        popupText.innerHTML = entry.text;
+
+      });
+
+      results.appendChild(result);
+
+    });
+
+  });
+
+});
+
+
+/* ESC closes popup */
+
+document.addEventListener("keydown", event => {
+
+  if (event.key === "Escape") {
+    popup.classList.remove("open");
+  }
+
+});
+
+</script>
 </body>
 </html>
