@@ -1,253 +1,193 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>The Lex Diary</title>
     <style>
-      :root {
-        --bg: #f7d6e6;
-        --pink: #eb7ab1;
-        --pink-dark: #c93d7f;
-        --rose: #fff2f8;
-        --card: rgba(255, 255, 255, 0.7);
-        --text: #3d1f2f;
-        --muted: #754b62;
-        --shadow: rgba(117, 75, 98, 0.18);
+      html,body{margin:0;padding:0;background:#f5b1cf;}
+      body{min-height:100vh;overflow-x:auto;}
+      .page{position:relative;width:1536px;max-width:100%;margin:0 auto;line-height:0;}
+      .design{display:block;width:100%;height:auto;}
+
+      .ui-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
       }
 
-      * {
-        box-sizing: border-box;
+      .panel {
+        position: absolute;
+        right: 6.5%;
+        top: 10%;
+        width: 26%;
+        min-width: 320px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(164,69,107,0.18);
+        border-radius: 22px;
+        padding: 18px 18px 14px;
+        box-shadow: 0 16px 28px rgba(124, 54, 92, 0.14);
+        pointer-events: auto;
       }
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #f7d6e6 0%, #f3c6dc 100%);
-        color: var(--text);
+      .panel h2 {
+        margin: 0 0 14px;
+        font: 700 18px/1.2 Arial,sans-serif;
+        letter-spacing: .08em;
+        color: #bb4984;
+        text-transform: uppercase;
       }
 
-      .app {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 30px 18px 60px;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        background: rgba(255, 255, 255, 0.4);
-        border: 1px solid rgba(201, 61, 127, 0.15);
-        border-radius: 20px;
-        padding: 18px 22px;
-        box-shadow: 0 8px 24px var(--shadow);
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 4vw, 3rem);
-      }
-
-      .actions {
+      .toolbar {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
       button {
         border: none;
         border-radius: 999px;
-        padding: 12px 18px;
-        font-size: 1rem;
-        font-weight: 700;
+        padding: 10px 14px;
+        font: 700 14px/1.2 Arial,sans-serif;
         cursor: pointer;
-        transition: transform 0.15s ease, opacity 0.15s ease;
-      }
-
-      button:hover {
-        transform: translateY(-1px);
-      }
-
-      button:active {
-        transform: translateY(0);
       }
 
       .primary {
-        background: var(--pink-dark);
+        background: #b7407a;
         color: white;
       }
 
       .secondary {
         background: #ffeaf4;
-        color: var(--pink-dark);
+        color: #a63f72;
       }
 
       .danger {
-        background: #ffefef;
-        color: #a0304b;
-      }
-
-      .layout {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 24px;
-        margin-top: 26px;
-      }
-
-      .panel {
-        background: var(--card);
-        border: 1px solid rgba(201, 61, 127, 0.14);
-        border-radius: 22px;
-        padding: 22px;
-        box-shadow: 0 10px 28px var(--shadow);
-      }
-
-      .panel h2 {
-        margin-top: 0;
-        margin-bottom: 18px;
-        font-size: 1.5rem;
-      }
-
-      form {
-        display: grid;
-        gap: 16px;
+        background: #ffe2e7;
+        color: #a93553;
       }
 
       label {
         display: grid;
-        gap: 8px;
-        font-weight: 700;
-        color: var(--muted);
+        gap: 6px;
+        margin-bottom: 12px;
+        font: 700 12px/1.2 Arial,sans-serif;
+        color: #754e63;
       }
 
       input, textarea, select {
         width: 100%;
-        padding: 12px 14px;
-        border: 1px solid rgba(201, 61, 127, 0.2);
+        border: 1px solid rgba(164,69,107,0.2);
         border-radius: 12px;
-        background: rgba(255,255,255,0.8);
-        font: inherit;
-        color: var(--text);
+        background: rgba(255,255,255,0.7);
+        color: #402538;
+        font: 400 14px/1.4 Arial,sans-serif;
+        padding: 10px 12px;
       }
 
       textarea {
-        min-height: 170px;
+        min-height: 120px;
         resize: vertical;
       }
 
-      .meta-row {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
       .entry-list {
+        margin-top: 14px;
         display: grid;
-        gap: 14px;
+        gap: 12px;
+        max-height: 230px;
+        overflow: auto;
       }
 
       .entry-card {
-        background: rgba(255,255,255,0.72);
-        border: 1px solid rgba(201, 61, 127, 0.12);
-        border-radius: 16px;
-        padding: 16px;
+        background: rgba(255,255,255,0.75);
+        border: 1px solid rgba(164,69,107,0.12);
+        border-radius: 12px;
+        padding: 12px;
       }
 
-      .entry-top {
+      .entry-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 8px;
+        gap: 8px;
+        margin-bottom: 6px;
       }
 
       .entry-title {
-        font-weight: 700;
-        font-size: 1.05rem;
+        font: 700 13px/1.3 Arial,sans-serif;
+        color: #402538;
       }
 
-      .entry-meta {
-        color: var(--muted);
-        font-size: 0.85rem;
-        margin-bottom: 8px;
+      .entry-mood {
+        background: #ffe5f2;
+        color: #b7407a;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font: 700 10px/1.2 Arial,sans-serif;
+      }
+
+      .entry-date {
+        font: 700 11px/1.2 Arial,sans-serif;
+        color: #7d596d;
+        margin-bottom: 6px;
       }
 
       .entry-text {
         white-space: pre-wrap;
-        line-height: 1.5;
-      }
-
-      .tag {
-        display: inline-block;
-        background: #ffe7f3;
-        color: var(--pink-dark);
-        border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        padding: 6px 10px;
+        font: 400 12px/1.5 Arial,sans-serif;
+        color: #402538;
       }
 
       .empty-state {
-        color: var(--muted);
-        background: rgba(255,255,255,0.55);
+        background: rgba(255,255,255,0.5);
         border-radius: 12px;
-        padding: 18px;
+        padding: 12px;
+        font: 400 12px/1.4 Arial,sans-serif;
+        color: #704d62;
       }
 
-      @media (max-width: 820px) {
-        .layout {
-          grid-template-columns: 1fr;
-        }
-
-        .meta-row {
-          grid-template-columns: 1fr;
-        }
-
-        .topbar {
-          flex-direction: column;
-          align-items: flex-start;
-        }
+      @media (max-width: 800px){
+        body{background:#f5b1cf;}
+        .page{width:1536px;max-width:none;}
+        .panel{right:2%;top:8%;width:32%;min-width:280px;}
       }
     </style>
   </head>
   <body>
-    <div class="app">
-      <header class="topbar">
-        <h1>The Lex Diary</h1>
-        <div class="actions">
-          <button id="newEntryBtn" class="primary" type="button">New Entry</button>
-          <button id="clearEntriesBtn" class="danger" type="button">Clear All</button>
-        </div>
-      </header>
+    <div class="page">
+      <img class="design" alt="The Lex Diary design" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCMRXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAId[...]" />
 
-      <main class="layout">
-        <section class="panel">
-          <h2>Write a new entry</h2>
+      <div class="ui-layer">
+        <div class="panel">
+          <h2>Diary</h2>
+
+          <div class="toolbar">
+            <button class="primary" id="newEntryBtn" type="button">New Entry</button>
+            <button class="danger" id="clearEntriesBtn" type="button">Clear All</button>
+          </div>
+
           <form id="entryForm">
-            <div class="meta-row">
-              <label>
-                Date
-                <input id="entryDate" type="date" />
-              </label>
-              <label>
-                Mood
-                <select id="entryMood">
-                  <option value="Happy">Happy</option>
-                  <option value="Calm">Calm</option>
-                  <option value="Focused">Focused</option>
-                  <option value="Tired">Tired</option>
-                  <option value="Excited">Excited</option>
-                  <option value="Reflective">Reflective</option>
-                </select>
-              </label>
-            </div>
+            <label>
+              Date
+              <input id="entryDate" type="date">
+            </label>
+
+            <label>
+              Mood
+              <select id="entryMood">
+                <option value="Happy">Happy</option>
+                <option value="Calm">Calm</option>
+                <option value="Focused">Focused</option>
+                <option value="Tired">Tired</option>
+                <option value="Excited">Excited</option>
+                <option value="Reflective">Reflective</option>
+              </select>
+            </label>
 
             <label>
               Title
-              <input id="entryTitle" type="text" maxlength="80" placeholder="Entry title" required />
+              <input id="entryTitle" type="text" maxlength="80" placeholder="Entry title" required>
             </label>
 
             <label>
@@ -255,18 +195,15 @@
               <textarea id="entryText" placeholder="Write what happened today..." required></textarea>
             </label>
 
-            <div class="actions">
-              <button id="saveEntryBtn" class="primary" type="submit">Save Entry</button>
-              <button id="resetFormBtn" class="secondary" type="reset">Reset</button>
+            <div class="toolbar">
+              <button class="primary" type="submit">Save Entry</button>
+              <button class="secondary" id="resetFormBtn" type="reset">Reset</button>
             </div>
           </form>
-        </section>
 
-        <aside class="panel">
-          <h2>Recent entries</h2>
           <div id="entryList" class="entry-list" aria-live="polite"></div>
-        </aside>
-      </main>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -288,15 +225,21 @@
 
       function getEntries() {
         const saved = localStorage.getItem(STORAGE_KEY);
-        try {
-          return saved ? JSON.parse(saved) : [];
-        } catch (error) {
-          return [];
-        }
+        try { return saved ? JSON.parse(saved) : []; }
+        catch { return []; }
       }
 
       function saveEntries(entries) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
       }
 
       function renderEntries() {
@@ -312,24 +255,15 @@
           .reverse()
           .map(entry => `
             <article class="entry-card">
-              <div class="entry-top">
+              <div class="entry-header">
                 <div class="entry-title">${escapeHtml(entry.title)}</div>
-                <span class="tag">${escapeHtml(entry.mood)}</span>
+                <span class="entry-mood">${escapeHtml(entry.mood)}</span>
               </div>
-              <div class="entry-meta">${escapeHtml(entry.date)}</div>
+              <div class="entry-date">${escapeHtml(entry.date)}</div>
               <div class="entry-text">${escapeHtml(entry.text)}</div>
             </article>
           `)
           .join('');
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
       }
 
       function handleSubmit(event) {
@@ -356,16 +290,13 @@
       }
 
       function clearEntries() {
-        const confirmed = window.confirm('Delete all diary entries?');
-        if (!confirmed) return;
-
+        if (!window.confirm('Delete all diary entries?')) return;
         localStorage.removeItem(STORAGE_KEY);
         renderEntries();
       }
 
       form.addEventListener('submit', handleSubmit);
       newEntryBtn.addEventListener('click', () => {
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
         entryTitle.focus();
       });
       clearEntriesBtn.addEventListener('click', clearEntries);
